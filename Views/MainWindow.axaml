@@ -5,9 +5,92 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="AvaloniaApplication29.Views.MainWindow"
-        x:DataType="vm:MainViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="AvaloniaApplication29">
+        Title="AvaloniaApplication29"
+        Width="760"
+        Height="720"
+        MinWidth="560"
+        MinHeight="560">
+
+    <ScrollViewer>
+        <StackPanel Margin="24" Spacing="16">
+            <TextBlock
+                FontSize="28"
+                FontWeight="Bold"
+                Text="Демо-банк" />
+
+            <Border Padding="16" CornerRadius="8" Background="#F0F3F8">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Баланс" />
+                    <TextBlock
+                        FontSize="26"
+                        FontWeight="Bold"
+                        Text="{Binding BalanceText}" />
+                </StackPanel>
+            </Border>
+
+            <TextBlock FontSize="20" FontWeight="SemiBold" Text="Покупка" />
+
+            <TextBox
+                Watermark="Название покупки"
+                Text="{Binding PurchaseTitle}" />
+
+            <TextBox
+                Watermark="Сумма"
+                Text="{Binding PurchaseAmountText}" />
+
+            <Button
+                HorizontalAlignment="Left"
+                Content="Оплатить"
+                Command="{Binding BuyCommand}" />
+
+            <TextBlock FontSize="20" FontWeight="SemiBold" Text="Перевод" />
+
+            <TextBox
+                Watermark="ID счета получателя (например, 2)"
+                Text="{Binding RecipientIdText}" />
+
+            <TextBox
+                Watermark="Сумма перевода"
+                Text="{Binding TransferAmountText}" />
+
+            <Button
+                HorizontalAlignment="Left"
+                Content="Перевести"
+                Command="{Binding TransferCommand}" />
+
+            <TextBlock
+                FontSize="20"
+                FontWeight="SemiBold"
+                Text="История покупок и переводов" />
+
+            <ListBox ItemsSource="{Binding History}" MaxHeight="260">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="*,Auto" Margin="4">
+                            <StackPanel Spacing="2">
+                                <TextBlock
+                                    FontWeight="SemiBold"
+                                    Text="{Binding Description}" />
+                                <TextBlock
+                                    FontSize="12"
+                                    Opacity="0.7"
+                                    Text="{Binding DateText}" />
+                            </StackPanel>
+
+                            <TextBlock
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Text="{Binding AmountText}" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <TextBlock
+                Text="{Binding StatusMessage}"
+                TextWrapping="Wrap" />
+        </StackPanel>
+    </ScrollViewer>
 
     <Design.DataContext>
         <vm:MainViewModel />
