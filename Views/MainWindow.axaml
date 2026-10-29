@@ -1,97 +1,361 @@
-﻿    <Window xmlns="https://github.com/avaloniaui"
+﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:AvaloniaApplication29.ViewModels"
         xmlns:services="using:AvaloniaApplication29.Services"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="460" d:DesignHeight="860"
         x:Class="AvaloniaApplication29.Views.MainWindow"
         x:DataType="vm:MainViewModel"
-        Title="AvaloniaApplication29"
-        Width="760"
-        Height="720"
-        MinWidth="560"
-        MinHeight="560">
+        Title="Демо-банк"
+        Width="460"
+        Height="860"
+        MinWidth="400"
+        MinHeight="640"
+        Background="#F4F6FB"
+        Icon="/Assets/avalonia-logo.ico">
 
-    <ScrollViewer>
-        <StackPanel Margin="24" Spacing="16">
-            <TextBlock
-                FontSize="28"
-                FontWeight="Bold"
-                Text="Демо-банк" />
+    <Window.Styles>
+        <Style Selector="TextBlock.h1">
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="#1B2130" />
+        </Style>
 
-            <Border Padding="16" CornerRadius="8" Background="#F0F3F8">
-                <StackPanel Spacing="6">
-                    <TextBlock Text="Баланс" />
+        <Style Selector="TextBlock.muted">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Foreground" Value="#8A93A6" />
+        </Style>
+
+        <Style Selector="TextBox.field">
+            <Setter Property="Background" Value="#F4F6FB" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Padding" Value="16,13" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="MinHeight" Value="48" />
+            <Setter Property="Foreground" Value="#1B2130" />
+            <Setter Property="PlaceholderForeground" Value="#8A93A6" />
+            <Setter Property="UseFloatingPlaceholder" Value="False" />
+        </Style>
+
+        <Style Selector="TextBox.field:pointerover">
+            <Setter Property="Background" Value="#EDF1F8" />
+        </Style>
+
+        <Style Selector="TextBox.field:focus">
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="BorderBrush" Value="#2F6BFF" />
+        </Style>
+
+        <Style Selector="Button.primary, Button.dark">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Padding" Value="16,14" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="Button.primary">
+            <Setter Property="Background" Value="#2F6BFF" />
+        </Style>
+
+        <Style Selector="Button.primary:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#1D5BFF" />
+        </Style>
+
+        <Style Selector="Button.primary:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#1748CC" />
+        </Style>
+
+        <Style Selector="Button.dark">
+            <Setter Property="Background" Value="#141B2D" />
+        </Style>
+
+        <Style Selector="Button.dark:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#1F2940" />
+        </Style>
+
+        <Style Selector="Button.dark:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#0B1020" />
+        </Style>
+
+        <Style Selector="ListBoxItem">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+
+        <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#F6F8FD" />
+        </Style>
+
+        <Style Selector="Border.op-icon">
+            <Setter Property="Background" Value="#FFF1EC" />
+        </Style>
+
+        <Style Selector="Border.op-icon.credit">
+            <Setter Property="Background" Value="#E8F9F0" />
+        </Style>
+
+        <Style Selector="TextBlock.op-arrow">
+            <Setter Property="Foreground" Value="#F97316" />
+        </Style>
+
+        <Style Selector="TextBlock.op-arrow.credit">
+            <Setter Property="Foreground" Value="#16A34A" />
+        </Style>
+
+        <Style Selector="TextBlock.op-amount">
+            <Setter Property="Foreground" Value="#DC2626" />
+        </Style>
+
+        <Style Selector="TextBlock.op-amount.credit">
+            <Setter Property="Foreground" Value="#16A34A" />
+        </Style>
+    </Window.Styles>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel
+            MaxWidth="420"
+            Margin="20,24,20,32"
+            Spacing="18"
+            HorizontalAlignment="Center">
+
+            <Grid ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
+                <Border Width="44" Height="44" CornerRadius="22">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                            <GradientStop Color="#7C5CFF" Offset="0" />
+                            <GradientStop Color="#2F6BFF" Offset="1" />
+                        </LinearGradientBrush>
+                    </Border.Background>
                     <TextBlock
-                        FontSize="26"
+                        Text="ДБ"
+                        FontSize="15"
                         FontWeight="Bold"
-                        Text="{Binding BalanceText}" />
+                        Foreground="White"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
+                </Border>
+
+                <StackPanel Grid.Column="1" Margin="12,0" Spacing="2" VerticalAlignment="Center">
+                    <TextBlock Classes="muted" Text="Добрый день" />
+                    <TextBlock Text="Сулейман Керимов" FontSize="18" FontWeight="Bold" Foreground="#1B2130" />
+                </StackPanel>
+
+                <Border
+                    Grid.Column="2"
+                    Width="40"
+                    Height="40"
+                    CornerRadius="20"
+                    Background="White"
+                    BoxShadow="0 6 18 0 #14000000">
+                    <TextBlock
+                        Text="₽"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Foreground="#2F6BFF"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
+                </Border>
+            </Grid>
+
+            <Border
+                CornerRadius="28"
+                Padding="24"
+                BoxShadow="0 18 40 0 #332F6BFF">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                        <GradientStop Color="#6D5BFF" Offset="0" />
+                        <GradientStop Color="#2F6BFF" Offset="0.55" />
+                        <GradientStop Color="#1FB6FF" Offset="1" />
+                    </LinearGradientBrush>
+                </Border.Background>
+
+                <StackPanel Spacing="18">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Баланс счёта" FontSize="13" Foreground="#DDE6FF" />
+                            <TextBlock
+                                Text="{Binding BalanceText}"
+                                FontSize="34"
+                                FontWeight="Bold"
+                                Foreground="White" />
+                        </StackPanel>
+
+                        <Border
+                            Grid.Column="1"
+                            Background="#33FFFFFF"
+                            CornerRadius="16"
+                            Padding="12,8"
+                            VerticalAlignment="Top">
+                            <TextBlock
+                                Text="•••• 2500000"
+                                FontSize="13"
+                                FontWeight="SemiBold"
+                                Foreground="White" />
+                        </Border>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="Auto,*">
+                        <TextBlock Text="Демо-счёт № 1" FontSize="13" Foreground="#E6ECFF" />
+                        <TextBlock
+                            Grid.Column="1"
+                            Text="RUB"
+                            FontSize="13"
+                            FontWeight="SemiBold"
+                            Foreground="#E6ECFF"
+                            HorizontalAlignment="Right" />
+                    </Grid>
                 </StackPanel>
             </Border>
 
-            <TextBlock FontSize="20" FontWeight="SemiBold" Text="Покупка" />
+            <Border
+                Background="White"
+                CornerRadius="22"
+                Padding="20"
+                BoxShadow="0 10 30 0 #0F1B2A4A">
+                <StackPanel Spacing="14">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Classes="h1" Text="Оплатить" />
+                        <Border
+                            Grid.Column="1"
+                            Background="#FFF1EC"
+                            CornerRadius="10"
+                            Padding="10,4">
+                            <TextBlock Text="Покупка" FontSize="12" FontWeight="SemiBold" Foreground="#F97316" />
+                        </Border>
+                    </Grid>
 
-            <TextBox
-                PlaceholderText="Название покупки"
-                Text="{Binding PurchaseTitle}" />
+                    <TextBox
+                        Classes="field"
+                        PlaceholderText="Название покупки"
+                        Text="{Binding PurchaseTitle}" />
 
-            <TextBox
-                PlaceholderText="Сумма"
-                Text="{Binding PurchaseAmountText}" />
+                    <TextBox
+                        Classes="field"
+                        PlaceholderText="Сумма, ₽"
+                        Text="{Binding PurchaseAmountText}" />
 
-            <Button
-                HorizontalAlignment="Left"
-                Content="Оплатить"
-                Command="{Binding BuyCommand}" />
+                    <Button Classes="primary" Content="Оплатить" Command="{Binding BuyCommand}" />
+                </StackPanel>
+            </Border>
 
-            <TextBlock FontSize="20" FontWeight="SemiBold" Text="Перевод" />
+            <Border
+                Background="White"
+                CornerRadius="22"
+                Padding="20"
+                BoxShadow="0 10 30 0 #0F1B2A4A">
+                <StackPanel Spacing="14">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Classes="h1" Text="Перевод" />
+                        <Border
+                            Grid.Column="1"
+                            Background="#EEF2FF"
+                            CornerRadius="10"
+                            Padding="10,4">
+                            <TextBlock Text="Между счетами" FontSize="12" FontWeight="SemiBold" Foreground="#2F6BFF" />
+                        </Border>
+                    </Grid>
 
-            <TextBox
-                PlaceholderText="ID счета получателя (например, 2)"
-                Text="{Binding RecipientIdText}" />
+                    <TextBox
+                        Classes="field"
+                        PlaceholderText="ID счёта получателя (например, 2)"
+                        Text="{Binding RecipientIdText}" />
 
-            <TextBox
-                PlaceholderText="Сумма перевода"
-                Text="{Binding TransferAmountText}" />
+                    <TextBox
+                        Classes="field"
+                        PlaceholderText="Сумма перевода, ₽"
+                        Text="{Binding TransferAmountText}" />
 
-            <Button
-                HorizontalAlignment="Left"
-                Content="Перевести"
-                Command="{Binding TransferCommand}" />
+                    <Button Classes="dark" Content="Перевести" Command="{Binding TransferCommand}" />
+                </StackPanel>
+            </Border>
 
-            <TextBlock
-                FontSize="20"
-                FontWeight="SemiBold"
-                Text="История покупок и переводов" />
+            <Border
+                IsVisible="{Binding HasStatus}"
+                Background="#EEF4FF"
+                CornerRadius="14"
+                Padding="14">
+                <TextBlock
+                    Text="{Binding StatusMessage}"
+                    FontSize="13"
+                    Foreground="#2F6BFF"
+                    TextWrapping="Wrap" />
+            </Border>
 
-            <ListBox ItemsSource="{Binding History}" MaxHeight="260">
-                <ListBox.ItemTemplate>
-                    <DataTemplate x:DataType="services:OperationRow">
-                        <Grid ColumnDefinitions="*,Auto" Margin="4">
-                            <StackPanel Spacing="2">
-                                <TextBlock
-                                    FontWeight="SemiBold"
-                                    Text="{Binding Description}" />
-                                <TextBlock
-                                    FontSize="12"
-                                    Opacity="0.7"
-                                    Text="{Binding DateText}" />
-                            </StackPanel>
+            <StackPanel Spacing="12">
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Classes="h1" Text="История операций" />
+                    <TextBlock Grid.Column="1" Classes="muted" Text="Все операции" VerticalAlignment="Center" />
+                </Grid>
 
-                            <TextBlock
-                                Grid.Column="1"
-                                VerticalAlignment="Center"
-                                Text="{Binding AmountText}" />
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                <Border
+                    Background="White"
+                    CornerRadius="22"
+                    Padding="8"
+                    BoxShadow="0 10 30 0 #0F1B2A4A">
+                    <ListBox
+                        ItemsSource="{Binding History}"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        MaxHeight="380">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="services:OperationRow">
+                                <Grid ColumnDefinitions="Auto,*,Auto" Margin="8">
+                                    <Border
+                                        Classes="op-icon"
+                                        Classes.credit="{Binding IsIncome}"
+                                        Width="44"
+                                        Height="44"
+                                        CornerRadius="14"
+                                        VerticalAlignment="Center">
+                                        <TextBlock
+                                            Classes="op-arrow"
+                                            Classes.credit="{Binding IsIncome}"
+                                            Text="{Binding Arrow}"
+                                            FontSize="18"
+                                            FontWeight="Bold"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center" />
+                                    </Border>
 
-            <TextBlock
-                Text="{Binding StatusMessage}"
-                TextWrapping="Wrap" />
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        Margin="12,0"
+                                        Spacing="2"
+                                        VerticalAlignment="Center">
+                                        <TextBlock
+                                            Text="{Binding Description}"
+                                            FontSize="14"
+                                            FontWeight="SemiBold"
+                                            Foreground="#1B2130"
+                                            TextTrimming="CharacterEllipsis" />
+                                        <TextBlock
+                                            Text="{Binding DateText}"
+                                            FontSize="12"
+                                            Foreground="#8A93A6" />
+                                    </StackPanel>
+
+                                    <TextBlock
+                                        Grid.Column="2"
+                                        Classes="op-amount"
+                                        Classes.credit="{Binding IsIncome}"
+                                        Text="{Binding AmountText}"
+                                        FontSize="14"
+                                        FontWeight="Bold"
+                                        VerticalAlignment="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Border>
+            </StackPanel>
         </StackPanel>
     </ScrollViewer>
-
 </Window>

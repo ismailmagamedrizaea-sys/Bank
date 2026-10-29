@@ -35,6 +35,13 @@ public partial class MainViewModel : ViewModelBase
     [ObservableProperty]
     private string statusMessage = "";
 
+    public bool HasStatus => !string.IsNullOrWhiteSpace(StatusMessage);
+
+    partial void OnStatusMessageChanged(string value)
+    {
+        OnPropertyChanged(nameof(HasStatus));
+    }
+
     public MainViewModel() : this(new BankingService())
     {
     }
