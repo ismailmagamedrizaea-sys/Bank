@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Security.Principal;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AvaloniaApplication29.Services
@@ -11,7 +11,7 @@ namespace AvaloniaApplication29.Services
     {
         public async Task InitializeAsync()
         {
-            await using var db = new AppDbContex();
+            await using var db = new AppDbContext();
             await db.Database.EnsureCreatedAsync();
 
             if (await db.Users.AnyAsync())
@@ -29,7 +29,7 @@ namespace AvaloniaApplication29.Services
         {
             await using var db = new AppDbContext();
 
-            return await db.User
+            return await db.Users
                 .AsNoTracking()
                 .FirstOrDefaultAsync(account => account.Id == accountId)
                 ?? throw new InvalidOperationException("Счет не найден.");
@@ -88,7 +88,7 @@ namespace AvaloniaApplication29.Services
             await using var db = new AppDbContext();
             await using var transaction = await db.Database.BeginTransactionAsync();
 
-            var sender = await db.Accounts
+            var sender = await db.Users
                 .FirstOrDefaultAsync(account => account.Id == fromAccountId)
                 ?? throw new InvalidOperationException("Счет отправителя не найден.");
 

@@ -1,10 +1,12 @@
 ﻿    <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:AvaloniaApplication29.ViewModels"
+        xmlns:services="using:AvaloniaApplication29.Services"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="AvaloniaApplication29.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
         Title="AvaloniaApplication29"
         Width="760"
         Height="720"
@@ -31,11 +33,11 @@
             <TextBlock FontSize="20" FontWeight="SemiBold" Text="Покупка" />
 
             <TextBox
-                Watermark="Название покупки"
+                PlaceholderText="Название покупки"
                 Text="{Binding PurchaseTitle}" />
 
             <TextBox
-                Watermark="Сумма"
+                PlaceholderText="Сумма"
                 Text="{Binding PurchaseAmountText}" />
 
             <Button
@@ -46,11 +48,11 @@
             <TextBlock FontSize="20" FontWeight="SemiBold" Text="Перевод" />
 
             <TextBox
-                Watermark="ID счета получателя (например, 2)"
+                PlaceholderText="ID счета получателя (например, 2)"
                 Text="{Binding RecipientIdText}" />
 
             <TextBox
-                Watermark="Сумма перевода"
+                PlaceholderText="Сумма перевода"
                 Text="{Binding TransferAmountText}" />
 
             <Button
@@ -65,7 +67,7 @@
 
             <ListBox ItemsSource="{Binding History}" MaxHeight="260">
                 <ListBox.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="services:OperationRow">
                         <Grid ColumnDefinitions="*,Auto" Margin="4">
                             <StackPanel Spacing="2">
                                 <TextBlock
@@ -92,9 +94,4 @@
         </StackPanel>
     </ScrollViewer>
 
-    <Design.DataContext>
-        <vm:MainViewModel />
-    </Design.DataContext>
-
-    
 </Window>

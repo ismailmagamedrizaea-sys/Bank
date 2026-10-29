@@ -1,9 +1,6 @@
-﻿using AvaloniaApplication29;
-using AvaloniaApplication29.Models;
-using AvaloniaApplication29.Services;
+﻿using AvaloniaApplication29.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -13,41 +10,6 @@ namespace AvaloniaApplication29.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
-    [ObservableProperty]
-    private string _login = "";
-
-    [ObservableProperty]
-    private string _email = "";
-
-    public ObservableCollection<User> Users { get; set; } = [];
-
-    [ObservableProperty]
-    private User? _selectedUser;
-
-    private IUserService userService;
-
-    public MainViewModel(IUserService _us) { userService = _us; _ = LoadUsersAsync(); }
-
-    private async Task LoadUsersAsync()
-    {
-        Users.Clear();
-        var urs = await userService.GetAllAsync();
-        foreach (var u in urs) Users.Add(u);
-    }
-
-    [RelayCommand]
-    private async Task AddUser()
-    {
-        await userService.AddAsync(Login, Email);
-        await LoadUsersAsync();
-    }
-
-    [RelayCommand] private async Task DeleteUser()
-    {
-        await userService.DeleteAsync(SelectedUser);
-        await LoadUsersAsync();
-    }
-
     private const int CurrentAccountId = 1;
 
     private readonly BankingService _bankingService;
@@ -72,6 +34,10 @@ public partial class MainViewModel : ViewModelBase
 
     [ObservableProperty]
     private string statusMessage = "";
+
+    public MainViewModel() : this(new BankingService())
+    {
+    }
 
     public MainViewModel(BankingService bankingService)
     {
@@ -126,7 +92,11 @@ public partial class MainViewModel : ViewModelBase
     {
         await _initialization;
 
-        if (!int.TryParse(RecipientIdText, out var recipientId))
+        if (!int.TryParse(
+                RecipientIdText?.Trim(),
+                NumberStyles.Integer,
+                CultureInfo.CurrentCulture,
+                out var recipientId))
         {
             StatusMessage = "Введите номер счета получателя.";
             return;
@@ -183,11 +153,24 @@ public partial class MainViewModel : ViewModelBase
 
     private static bool TryReadAmount(string text, out decimal amount)
     {
-        return decimal.TryParse(
-                   text,
-                   NumberStyles.Number,
-                   CultureInfo.CurrentCulture,
-                   out amount)
-               && amount > 0;
+        amount = 0;
+
+        if (string.IsNullOrWhiteSpace(text))
+            return false;
+
+        var normalized = text
+            .Trim()
+            .Replace(" ", "")
+            .Replace("\u00A0", "")
+            .Replace("\u202F", "");
+
+        if (decimal.TryParse(normalized, NumberStyles.Number, CultureInfo.CurrentCulture, out amount)
+            || decimal.TryParse(normalized, NumberStyles.Number, CultureInfo.InvariantCulture, out amount)
+            || decimal.TryParse(normalized.Replace(',', '.'), NumberStyles.Number, CultureInfo.InvariantCulture, out amount))
+        {
+            return amount > 0;
+        }
+
+        return false;
     }
 }

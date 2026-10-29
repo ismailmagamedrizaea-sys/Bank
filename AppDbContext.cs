@@ -6,7 +6,7 @@ using System.Security.Principal;
 
 namespace AvaloniaApplication29;
 
-public class AppDbContex : DbContext
+public class AppDbContext : DbContext
 {
     public DbSet<User> Users => Set<User>();
     public DbSet<Operation> Operations => Set<Operation>();
