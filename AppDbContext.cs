@@ -9,17 +9,28 @@ namespace AvaloniaApplication29;
 public class AppDbContex : DbContext
 {
     public DbSet<User> Users => Set<User>();
+    public DbSet<Operation> Operations => Set<Operation>();
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlite($"Data Source={AppContext.BaseDirectory}/app.db");
+        if (optionsBuilder.IsConfigured)
+            return;
+
+        var folder = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "BankDemo");
+
+        Directory.CreateDirectory(folder);
+
+        var databasePath = Path.Combine(folder, "bank.db");
+        optionsBuilder.UseSqlite($"Data Source={databasePath}");
     }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Operation>()
-                .HasOne<User>()
-                .WithMany()
-                .HasForeignKey(operation => operation.AccountId);
-        }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Operation>()
+            .HasOne<User>()
+            .WithMany()
+            .HasForeignKey(operation => operation.AccountId);
     }
 }

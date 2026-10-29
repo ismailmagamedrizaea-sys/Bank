@@ -96,29 +96,5 @@
         <vm:MainViewModel />
     </Design.DataContext>
 
-    <StackPanel Margin="40">
-        <StackPanel>
-            <TextBox PlaceholderText="Login:" Text="{Binding Login}" Margin="0 0 0 10" />
-            <TextBox PlaceholderText="Email:" Text="{Binding Email}" Margin="0 0 0 10" />
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="Add" Command="{Binding AddUserCommand}" HorizontalAlignment="Center" />
-                <Button Content="Remove" Command="{Binding DeleteUserCommand}" HorizontalAlignment="Center" />
-            </StackPanel>
-        </StackPanel>
-
-        <TextBlock Text="Users:" FontSize="30" FontWeight="Bold" />
-        <ScrollViewer>
-            <ListBox ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <TextBlock Text="{Binding Login}" />
-                            <TextBlock Text="{Binding Email}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </ScrollViewer>
-
-    </StackPanel>
+    
 </Window>
