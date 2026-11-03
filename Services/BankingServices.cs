@@ -46,6 +46,32 @@ namespace AvaloniaApplication29.Services
                 .ToListAsync();
         }
 
+        public async Task DepositAsync(int accountId, decimal amount)
+        {
+            ValidateAmount(amount);
+
+            await using var db = new AppDbContext();
+            await using var transaction = await db.Database.BeginTransactionAsync();
+
+            var account = await db.Users
+                .FirstOrDefaultAsync(item => item.Id == accountId)
+                ?? throw new InvalidOperationException("Счет не найден.");
+
+            account.Balance += amount;
+
+            db.Operations.Add(new Operation
+            {
+                AccountId = accountId,
+                Kind = "Пополнение",
+                SignedAmount = amount,
+                Description = "Пополнение баланса",
+                CreatedAtUtc = DateTime.UtcNow
+            });
+
+            await db.SaveChangesAsync();
+            await transaction.CommitAsync();
+        }
+
         public async Task PurchaseAsync(int accountId, string title, decimal amount)
         {
             ValidateAmount(amount);

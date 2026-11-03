@@ -27,6 +27,9 @@ public partial class MainViewModel : ViewModelBase
     private string purchaseAmountText = "";
 
     [ObservableProperty]
+    private string depositAmountText = "";
+
+    [ObservableProperty]
     private string recipientIdText = "2";
 
     [ObservableProperty]
@@ -120,6 +123,30 @@ public partial class MainViewModel : ViewModelBase
                 "Чек об оплате",
                 -amount,
                 $"Покупка: {title}",
+                "Демо-счёт № 1"));
+    }
+
+    [RelayCommand]
+    private async Task DepositAsync()
+    {
+        await _initialization;
+
+        if (!TryReadAmount(DepositAmountText, out var amount))
+        {
+            StatusMessage = "Введите корректную сумму пополнения.";
+            return;
+        }
+
+        await RunOperationAsync(
+            async () =>
+            {
+                await _bankingService.DepositAsync(CurrentAccountId, amount);
+                DepositAmountText = "";
+            },
+            () => ShowReceipt(
+                "Чек о пополнении",
+                amount,
+                "Пополнение баланса",
                 "Демо-счёт № 1"));
     }
 

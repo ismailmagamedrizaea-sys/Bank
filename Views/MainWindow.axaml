@@ -146,7 +146,7 @@
 
                 <StackPanel Grid.Column="1" Margin="12,0" Spacing="2" VerticalAlignment="Center">
                     <TextBlock Classes="muted" Text="Добрый день" />
-                    <TextBlock Text="Сулейман Керимов" FontSize="18" FontWeight="Bold" Foreground="#1B2130" />
+                    <TextBlock Text="Пользователь" FontSize="18" FontWeight="Bold" Foreground="#1B2130" />
                 </StackPanel>
 
                 <Border
@@ -213,6 +213,32 @@
                             Foreground="#E6ECFF"
                             HorizontalAlignment="Right" />
                     </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border
+                Background="White"
+                CornerRadius="22"
+                Padding="20"
+                BoxShadow="0 10 30 0 #0F1B2A4A">
+                <StackPanel Spacing="14">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Classes="h1" Text="Пополнить баланс" />
+                        <Border
+                            Grid.Column="1"
+                            Background="#E8F9F0"
+                            CornerRadius="10"
+                            Padding="10,4">
+                            <TextBlock Text="Пополнение" FontSize="12" FontWeight="SemiBold" Foreground="#16A34A" />
+                        </Border>
+                    </Grid>
+
+                    <TextBox
+                        Classes="field"
+                        PlaceholderText="Сумма пополнения, ₽"
+                        Text="{Binding DepositAmountText}" />
+
+                    <Button Classes="primary" Content="Пополнить" Command="{Binding DepositCommand}" />
                 </StackPanel>
             </Border>
 
