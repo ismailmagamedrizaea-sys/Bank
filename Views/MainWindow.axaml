@@ -119,12 +119,13 @@
         </Style>
     </Window.Styles>
 
-    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-        <StackPanel
-            MaxWidth="420"
-            Margin="20,24,20,32"
-            Spacing="18"
-            HorizontalAlignment="Center">
+    <Grid>
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <StackPanel
+                MaxWidth="420"
+                Margin="20,24,20,32"
+                Spacing="18"
+                HorizontalAlignment="Center">
 
             <Grid ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
                 <Border Width="44" Height="44" CornerRadius="22">
@@ -195,7 +196,7 @@
                             Padding="12,8"
                             VerticalAlignment="Top">
                             <TextBlock
-                                Text="•••• 2500000"
+                                Text="••••"
                                 FontSize="13"
                                 FontWeight="SemiBold"
                                 Foreground="White" />
@@ -265,7 +266,7 @@
 
                     <TextBox
                         Classes="field"
-                        PlaceholderText="ID счёта получателя (например, 2)"
+                        PlaceholderText="ID счёта получателя"
                         Text="{Binding RecipientIdText}" />
 
                     <TextBox
@@ -357,5 +358,112 @@
                 </Border>
             </StackPanel>
         </StackPanel>
-    </ScrollViewer>
+        </ScrollViewer>
+
+        <Border
+            IsVisible="{Binding IsReceiptVisible}"
+            Background="#990B1020">
+            <Border
+                Width="360"
+                Margin="24"
+                Padding="24"
+                CornerRadius="28"
+                Background="White"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                BoxShadow="0 24 60 0 #55101828">
+                <StackPanel Spacing="16">
+                    <Border
+                        Width="64"
+                        Height="64"
+                        CornerRadius="32"
+                        Background="#E8F9F0"
+                        HorizontalAlignment="Center">
+                        <TextBlock
+                            Text="✓"
+                            FontSize="30"
+                            FontWeight="Bold"
+                            Foreground="#16A34A"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
+                    </Border>
+
+                    <StackPanel Spacing="4">
+                        <TextBlock
+                            Text="{Binding ReceiptTitle}"
+                            FontSize="20"
+                            FontWeight="Bold"
+                            Foreground="#1B2130"
+                            HorizontalAlignment="Center" />
+                        <TextBlock
+                            Text="Операция выполнена успешно"
+                            FontSize="13"
+                            Foreground="#8A93A6"
+                            HorizontalAlignment="Center" />
+                    </StackPanel>
+
+                    <TextBlock
+                        Text="{Binding ReceiptAmount}"
+                        FontSize="32"
+                        FontWeight="Bold"
+                        Foreground="#1B2130"
+                        HorizontalAlignment="Center" />
+
+                    <Border Height="1" Background="#EEF1F6" />
+
+                    <Grid
+                        ColumnDefinitions="Auto,*"
+                        RowDefinitions="Auto,Auto,Auto,Auto"
+                        ColumnSpacing="16"
+                        RowSpacing="10">
+                        <TextBlock Classes="muted" Text="Описание" />
+                        <TextBlock
+                            Grid.Column="1"
+                            Text="{Binding ReceiptDescription}"
+                            FontSize="13"
+                            FontWeight="SemiBold"
+                            Foreground="#1B2130"
+                            TextAlignment="Right"
+                            TextWrapping="Wrap" />
+
+                        <TextBlock Grid.Row="1" Classes="muted" Text="Счёт" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Text="{Binding ReceiptAccount}"
+                            FontSize="13"
+                            FontWeight="SemiBold"
+                            Foreground="#1B2130"
+                            TextAlignment="Right" />
+
+                        <TextBlock Grid.Row="2" Classes="muted" Text="Дата" />
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Text="{Binding ReceiptDate}"
+                            FontSize="13"
+                            FontWeight="SemiBold"
+                            Foreground="#1B2130"
+                            TextAlignment="Right" />
+
+                        <TextBlock Grid.Row="3" Classes="muted" Text="Номер" />
+                        <TextBlock
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            Text="{Binding ReceiptNumber}"
+                            FontSize="13"
+                            FontWeight="SemiBold"
+                            Foreground="#1B2130"
+                            TextAlignment="Right" />
+                    </Grid>
+
+                    <Button
+                        Classes="primary"
+                        Content="Готово"
+                        Command="{Binding CloseReceiptCommand}"
+                        Margin="0,4,0,0" />
+                </StackPanel>
+            </Border>
+        </Border>
+    </Grid>
 </Window>

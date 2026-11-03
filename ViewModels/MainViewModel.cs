@@ -35,6 +35,27 @@ public partial class MainViewModel : ViewModelBase
     [ObservableProperty]
     private string statusMessage = "";
 
+    [ObservableProperty]
+    private bool isReceiptVisible;
+
+    [ObservableProperty]
+    private string receiptTitle = "";
+
+    [ObservableProperty]
+    private string receiptAmount = "";
+
+    [ObservableProperty]
+    private string receiptDescription = "";
+
+    [ObservableProperty]
+    private string receiptAccount = "";
+
+    [ObservableProperty]
+    private string receiptDate = "";
+
+    [ObservableProperty]
+    private string receiptNumber = "";
+
     public bool HasStatus => !string.IsNullOrWhiteSpace(StatusMessage);
 
     partial void OnStatusMessageChanged(string value)
@@ -82,16 +103,24 @@ public partial class MainViewModel : ViewModelBase
             return;
         }
 
-        await RunOperationAsync(async () =>
-        {
-            await _bankingService.PurchaseAsync(
-                CurrentAccountId,
-                PurchaseTitle.Trim(),
-                amount);
+        var title = PurchaseTitle.Trim();
 
-            PurchaseTitle = "";
-            PurchaseAmountText = "";
-        });
+        await RunOperationAsync(
+            async () =>
+            {
+                await _bankingService.PurchaseAsync(
+                    CurrentAccountId,
+                    title,
+                    amount);
+
+                PurchaseTitle = "";
+                PurchaseAmountText = "";
+            },
+            () => ShowReceipt(
+                "Чек об оплате",
+                -amount,
+                $"Покупка: {title}",
+                "Демо-счёт № 1"));
     }
 
     [RelayCommand]
@@ -115,22 +144,58 @@ public partial class MainViewModel : ViewModelBase
             return;
         }
 
-        await RunOperationAsync(async () =>
-        {
-            await _bankingService.TransferAsync(
-                CurrentAccountId,
-                recipientId,
-                amount);
+        await RunOperationAsync(
+            async () =>
+            {
+                await _bankingService.TransferAsync(
+                    CurrentAccountId,
+                    recipientId,
+                    amount);
 
-            TransferAmountText = "";
-        });
+                TransferAmountText = "";
+            },
+            () => ShowReceipt(
+                "Чек о переводе",
+                -amount,
+                $"Перевод на счёт № {recipientId}",
+                "Демо-счёт № 1"));
     }
 
-    private async Task RunOperationAsync(Func<Task> operation)
+    [RelayCommand]
+    private void CloseReceipt()
+    {
+        IsReceiptVisible = false;
+    }
+
+    private void ShowReceipt(
+        string title,
+        decimal signedAmount,
+        string description,
+        string account)
+    {
+        var now = DateTime.Now;
+
+        ReceiptTitle = title;
+        ReceiptAmount = FormatSignedAmount(signedAmount);
+        ReceiptDescription = description;
+        ReceiptAccount = account;
+        ReceiptDate = now.ToString("dd.MM.yyyy HH:mm", CultureInfo.CurrentCulture);
+        ReceiptNumber = now.ToString("yyMMdd-HHmmss", CultureInfo.InvariantCulture);
+        IsReceiptVisible = true;
+    }
+
+    private static string FormatSignedAmount(decimal signedAmount)
+    {
+        var sign = signedAmount > 0 ? "+" : "";
+        return sign + signedAmount.ToString("C", CultureInfo.CurrentCulture);
+    }
+
+    private async Task RunOperationAsync(Func<Task> operation, Action? onSuccess = null)
     {
         try
         {
             await operation();
+            onSuccess?.Invoke();
             await RefreshAsync();
             StatusMessage = "Операция выполнена.";
         }
