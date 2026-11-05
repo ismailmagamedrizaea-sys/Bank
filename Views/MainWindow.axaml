@@ -80,7 +80,7 @@
         </Style>
 
         <Style Selector="Button.dark:pressed /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="#0B1020" />
+            <Setter Property="Background" Value="#00FA9A" />
         </Style>
 
         <Style Selector="ListBoxItem">
@@ -120,7 +120,97 @@
     </Window.Styles>
 
     <Grid>
-        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer
+            IsVisible="{Binding IsNotAuthenticated}"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Auto">
+            <StackPanel
+                MaxWidth="420"
+                Margin="20,24,20,32"
+                Spacing="18"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                <Border
+                    Background="White"
+                    CornerRadius="24"
+                    Padding="24"
+                    BoxShadow="0 10 30 0 #0F1B2A4A">
+                    <StackPanel Spacing="16">
+                        <TextBlock
+                            Text="Демо-банк"
+                            FontSize="28"
+                            FontWeight="Bold"
+                            Foreground="#1B2130"
+                            HorizontalAlignment="Center" />
+
+                        <StackPanel IsVisible="{Binding IsLoginMode}" Spacing="14">
+                            <TextBlock
+                                Text="Присоединяйся к нам — мы лучшие!"
+                                FontSize="24"
+                                FontWeight="Bold"
+                                Foreground="#1B2130"
+                                TextWrapping="Wrap"
+                                TextAlignment="Center" />
+                            <Button
+                                Classes="primary"
+                                Content="Создать аккаунт"
+                                Command="{Binding ShowRegisterCommand}" />
+                            <TextBlock Classes="h1" Text="Вход в аккаунт" />
+                            <TextBox
+                                Classes="field"
+                                PlaceholderText="Email"
+                                Text="{Binding LoginEmailText}" />
+                            <TextBox
+                                Classes="field"
+                                PlaceholderText="Пароль"
+                                PasswordChar="●"
+                                Text="{Binding LoginPasswordText}" />
+                            <Button Classes="primary" Content="Войти" Command="{Binding LoginCommand}" />
+                        </StackPanel>
+
+                        <StackPanel IsVisible="{Binding IsRegisterMode}" Spacing="14">
+                            <TextBlock Classes="h1" Text="Регистрация" />
+                            <TextBox
+                                Classes="field"
+                                PlaceholderText="Имя"
+                                Text="{Binding FirstNameText}" />
+                            <TextBox
+                                Classes="field"
+                                PlaceholderText="Фамилия"
+                                Text="{Binding LastNameText}" />
+                            <TextBox
+                                Classes="field"
+                                PlaceholderText="Email"
+                                Text="{Binding RegisterEmailText}" />
+                            <TextBox
+                                Classes="field"
+                                PlaceholderText="Пароль (не менее 8 символов)"
+                                PasswordChar="●"
+                                Text="{Binding RegisterPasswordText}" />
+                            <Button Classes="primary" Content="Создать аккаунт" Command="{Binding RegisterCommand}" />
+                            <Button Content="Уже есть аккаунт? Войти" Command="{Binding ShowLoginCommand}" />
+                        </StackPanel>
+
+                        <Border
+                            IsVisible="{Binding HasStatus}"
+                            Background="#EEF4FF"
+                            CornerRadius="14"
+                            Padding="14">
+                            <TextBlock
+                                Text="{Binding StatusMessage}"
+                                FontSize="13"
+                                Foreground="#2F6BFF"
+                                TextWrapping="Wrap" />
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <ScrollViewer
+            IsVisible="{Binding IsAuthenticated}"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Auto">
             <StackPanel
                 MaxWidth="420"
                 Margin="20,24,20,32"
@@ -146,24 +236,16 @@
 
                 <StackPanel Grid.Column="1" Margin="12,0" Spacing="2" VerticalAlignment="Center">
                     <TextBlock Classes="muted" Text="Добрый день" />
-                    <TextBlock Text="Пользователь" FontSize="18" FontWeight="Bold" Foreground="#1B2130" />
+                    <TextBlock Text="{Binding AccountDisplayName}" FontSize="18" FontWeight="Bold" Foreground="#1B2130" />
                 </StackPanel>
 
-                <Border
+                <Button
                     Grid.Column="2"
-                    Width="40"
-                    Height="40"
-                    CornerRadius="20"
-                    Background="White"
-                    BoxShadow="0 6 18 0 #14000000">
-                    <TextBlock
-                        Text="₽"
-                        FontSize="18"
-                        FontWeight="SemiBold"
-                        Foreground="#2F6BFF"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-                </Border>
+                    Classes="dark"
+                    Content="Выйти"
+                    Command="{Binding LogoutCommand}"
+                    Padding="12,8"
+                    VerticalAlignment="Center" />
             </Grid>
 
             <Border
@@ -204,7 +286,7 @@
                     </Grid>
 
                     <Grid ColumnDefinitions="Auto,*">
-                        <TextBlock Text="Демо-счёт № 1" FontSize="13" Foreground="#E6ECFF" />
+                        <TextBlock Text="{Binding AccountNumberText}" FontSize="13" Foreground="#E6ECFF" />
                         <TextBlock
                             Grid.Column="1"
                             Text="RUB"

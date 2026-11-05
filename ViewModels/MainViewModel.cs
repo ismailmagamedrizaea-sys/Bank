@@ -1,4 +1,5 @@
-﻿using AvaloniaApplication29.Services;
+﻿using AvaloniaApplication29.Models;
+using AvaloniaApplication29.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -10,12 +11,42 @@ namespace AvaloniaApplication29.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
-    private const int CurrentAccountId = 1;
+    private int CurrentAccountId { get; set; }
 
     private readonly BankingService _bankingService;
     private readonly Task _initialization;
 
     public ObservableCollection<OperationRow> History { get; } = new();
+
+    [ObservableProperty]
+    private string firstNameText = "";
+
+    [ObservableProperty]
+    private string lastNameText = "";
+
+    [ObservableProperty]
+    private string registerEmailText = "";
+
+    [ObservableProperty]
+    private string registerPasswordText = "";
+
+    [ObservableProperty]
+    private string loginEmailText = "";
+
+    [ObservableProperty]
+    private string loginPasswordText = "";
+
+    [ObservableProperty]
+    private bool isAuthenticated;
+
+    [ObservableProperty]
+    private bool isRegisterMode;
+
+    [ObservableProperty]
+    private string accountDisplayName = "";
+
+    [ObservableProperty]
+    private string accountNumberText = "";
 
     [ObservableProperty]
     private string balanceText = "Загрузка…";
@@ -60,10 +91,22 @@ public partial class MainViewModel : ViewModelBase
     private string receiptNumber = "";
 
     public bool HasStatus => !string.IsNullOrWhiteSpace(StatusMessage);
+    public bool IsNotAuthenticated => !IsAuthenticated;
+    public bool IsLoginMode => !IsRegisterMode;
 
     partial void OnStatusMessageChanged(string value)
     {
         OnPropertyChanged(nameof(HasStatus));
+    }
+
+    partial void OnIsAuthenticatedChanged(bool value)
+    {
+        OnPropertyChanged(nameof(IsNotAuthenticated));
+    }
+
+    partial void OnIsRegisterModeChanged(bool value)
+    {
+        OnPropertyChanged(nameof(IsLoginMode));
     }
 
     public MainViewModel() : this(new BankingService())
@@ -81,12 +124,97 @@ public partial class MainViewModel : ViewModelBase
         try
         {
             await _bankingService.InitializeAsync();
-            await RefreshAsync();
         }
         catch (Exception ex)
         {
             StatusMessage = ex.Message;
         }
+    }
+
+    [RelayCommand]
+    private async Task LoginAsync()
+    {
+        await _initialization;
+
+        try
+        {
+            var user = await _bankingService.LoginAsync(LoginEmailText, LoginPasswordText);
+            if (user is null)
+            {
+                StatusMessage = "Неверный Email или пароль.";
+                return;
+            }
+
+            LoginPasswordText = "";
+            await SignInAsync(user);
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = ex.Message;
+        }
+    }
+
+    [RelayCommand]
+    private async Task RegisterAsync()
+    {
+        await _initialization;
+
+        try
+        {
+            var user = await _bankingService.RegisterAsync(
+                FirstNameText,
+                LastNameText,
+                RegisterEmailText,
+                RegisterPasswordText);
+
+            FirstNameText = "";
+            LastNameText = "";
+            RegisterEmailText = "";
+            RegisterPasswordText = "";
+            await SignInAsync(user);
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = ex.Message;
+        }
+    }
+
+    [RelayCommand]
+    private void ShowRegister()
+    {
+        IsRegisterMode = true;
+        StatusMessage = "";
+    }
+
+    [RelayCommand]
+    private void ShowLogin()
+    {
+        IsRegisterMode = false;
+        StatusMessage = "";
+    }
+
+    [RelayCommand]
+    private void Logout()
+    {
+        IsAuthenticated = false;
+        CurrentAccountId = 0;
+        AccountDisplayName = "";
+        AccountNumberText = "";
+        BalanceText = "";
+        History.Clear();
+        IsReceiptVisible = false;
+        StatusMessage = "";
+    }
+
+    private async Task SignInAsync(User user)
+    {
+        CurrentAccountId = user.Id;
+        AccountDisplayName = $"{user.FirstName} {user.LastName}";
+        AccountNumberText = $"Счёт № {user.Id}";
+        IsAuthenticated = true;
+        IsRegisterMode = false;
+        await RefreshAsync();
+        StatusMessage = "Вход выполнен.";
     }
 
     [RelayCommand]
@@ -123,7 +251,7 @@ public partial class MainViewModel : ViewModelBase
                 "Чек об оплате",
                 -amount,
                 $"Покупка: {title}",
-                "Демо-счёт № 1"));
+                AccountNumberText));
     }
 
     [RelayCommand]
@@ -147,7 +275,7 @@ public partial class MainViewModel : ViewModelBase
                 "Чек о пополнении",
                 amount,
                 "Пополнение баланса",
-                "Демо-счёт № 1"));
+                AccountNumberText));
     }
 
     [RelayCommand]
@@ -185,7 +313,7 @@ public partial class MainViewModel : ViewModelBase
                 "Чек о переводе",
                 -amount,
                 $"Перевод на счёт № {recipientId}",
-                "Демо-счёт № 1"));
+                AccountNumberText));
     }
 
     [RelayCommand]
